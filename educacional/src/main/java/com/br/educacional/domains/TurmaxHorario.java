@@ -1,7 +1,6 @@
 package com.br.educacional.domains;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -38,11 +37,11 @@ public class TurmaxHorario implements Serializable {
     @NotNull
     @Temporal(TemporalType.TIME)
     @Column(name = "HORA_INICIO")
-    private LocalDateTime horaInicio;
+    private Date horaInicio;
     @NotNull
     @Temporal(TemporalType.TIME)
     @Column(name = "HORA_FIM")
-    private LocalDateTime horaFim;
+    private Date horaFim;
 
     public TurmaxHorario() {
     }
@@ -71,19 +70,19 @@ public class TurmaxHorario implements Serializable {
         this.dia = dia;
     }
 
-    public LocalDateTime getHoraInicio() {
+    public Date getHoraInicio() {
         return horaInicio;
     }
 
-    public void setHoraInicio(LocalDateTime horaInicio) {
+    public void setHoraInicio(Date horaInicio) {
         this.horaInicio = horaInicio;
     }
 
-    public LocalDateTime getHoraFim() {
+    public Date getHoraFim() {
         return horaFim;
     }
 
-    public void setHoraFim(LocalDateTime horaFim) {
+    public void setHoraFim(Date horaFim) {
         this.horaFim = horaFim;
     }
 

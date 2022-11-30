@@ -1,0 +1,49 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="title">Cadastro de Alunos</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form1">
+            <p:growl id="mensagem" />
+            <p:panel header="Dados Gerais">
+                <p:panelGrid columns="2" layout="grid">
+                    <p:panelGrid columns="1" layout="grid">
+                        <p:outputLabel value="Nome Completo" for="@next" />
+                        <p:inputText value="#{alunoBean.aluno.pessoa.nome}" maxlength="255" required="true" />
+
+                        <p:outputLabel value="CPF" for="@next" />
+                        <p:inputMask value="#{alunoBean.aluno.pessoa.cpf}" mask="999.999.999-99" required="true" converter="#{cpfConverter}" />
+
+                        <p:outputLabel value="E-mail" for="@next" />
+                        <p:inputText value="#{alunoBean.aluno.pessoa.email}" maxlength="150" required="true" />
+
+                        <p:outputLabel value="Telefone" for="@next" />
+                        <p:inputMask value="#{alunoBean.aluno.pessoa.telefone}" mask="(999)99999-9999" required="true" converter="#{telefoneConverter}" />
+                    </p:panelGrid>
+                    <p:panelGrid columns="1" layout="grid">
+                        <p:outputLabel value="Cidade" for="@next" />
+                        <p:autoComplete value="#{alunoBean.aluno.pessoa.cidade}" completeMethod="#{alunoBean.filtrarCidades}" scrollHeight="250" required="true" autocomplete="false"
+                                        placeholder="Pesquise pelo nome da cidade" var="cidade" converter="#{municipioConverter}" itemLabel="#{cidade.nome}" itemValue="#{cidade}" />
+
+                        <p:outputLabel value="Rua" for="@next" />
+                        <p:inputText value="#{alunoBean.aluno.pessoa.rua}" maxlength="120" />
+
+                        <p:outputLabel value="Bairro" for="@next" />
+                        <p:inputText value="#{alunoBean.aluno.pessoa.bairro}" maxlength="100" />
+
+                        <p:outputLabel value="Número" for="@next" />
+                        <p:inputNumber value="#{alunoBean.aluno.pessoa.numero}" minValue="0" maxValue="10000" size="30" decimalPlaces="0" />
+                    </p:panelGrid>
+                </p:panelGrid>
+                <f:facet name="footer">
+                    <p:commandButton value="Gravar" process=":form1" update=":form1" actionListener="#{alunoBean.gravar()}" />
+                </f:facet>
+            </p:panel>
+        </h:form>
+    </ui:define>
+</ui:composition>
