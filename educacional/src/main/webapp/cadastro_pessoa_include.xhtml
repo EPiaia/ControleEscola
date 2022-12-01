@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:comp="http://xmlns.jcp.org/jsf/composite/comp">
+
+    <h:form id="form1">
+        <p:growl id="mensagem" />
+        <p:panel header="Dados Gerais">
+            <p:panelGrid columns="2" layout="grid">
+                <p:panelGrid columns="1" layout="grid">
+                    <p:outputLabel value="Código" for="@next" />
+                    <p:inputText value="#{pessoaBean.alunoSelecionado.id}" disabled="true" size="10" rendered="#{pessoaBean.cadastroAluno}" />
+                    <p:inputText value="#{pessoaBean.professorSelecionado.id}" disabled="true" size="10" rendered="#{pessoaBean.cadastroProfessor}" />
+
+                    <p:outputLabel value="Nome Completo" for="@next" />
+                    <p:inputText value="#{pessoaBean.pessoa.nome}" maxlength="255" required="true" />
+
+                    <p:outputLabel value="CPF" for="@next" />
+                    <p:inputMask value="#{pessoaBean.pessoa.cpf}" mask="999.999.999-99" required="true" converter="#{cpfConverter}" />
+
+                    <p:outputLabel value="E-mail" for="@next" />
+                    <p:inputText value="#{pessoaBean.pessoa.email}" maxlength="150" required="true" />
+
+                    <p:outputLabel value="Telefone" for="@next" />
+                    <p:inputMask value="#{pessoaBean.pessoa.telefone}" mask="(999)99999-9999" required="true" converter="#{telefoneConverter}" />
+                </p:panelGrid>
+                <p:panelGrid columns="1" layout="grid">
+                    <p:outputLabel value="Cidade" for="@next" />
+                    <p:autoComplete value="#{pessoaBean.pessoa.cidade}" completeMethod="#{pessoaBean.filtrarCidades}" scrollHeight="250" required="true" autocomplete="false"
+                                    placeholder="Pesquise pelo nome da cidade" var="cidade" converter="#{municipioConverter}" itemLabel="#{cidade.nome}" itemValue="#{cidade}" />
+
+                    <p:outputLabel value="Rua" for="@next" />
+                    <p:inputText value="#{pessoaBean.pessoa.rua}" maxlength="120" />
+
+                    <p:outputLabel value="Bairro" for="@next" />
+                    <p:inputText value="#{pessoaBean.pessoa.bairro}" maxlength="100" />
+
+                    <p:outputLabel value="Número" for="@next" />
+                    <p:inputNumber value="#{pessoaBean.pessoa.numero}" minValue="0" maxValue="10000" size="30" decimalPlaces="0" />
+                </p:panelGrid>
+            </p:panelGrid>
+            <f:facet name="footer">
+                <comp:toolbarCrud bean="#{pessoaBean}" />
+            </f:facet>
+        </p:panel>
+    </h:form>
+
+    <h:form id="formDlg">
+        <p:dialog widgetVar="wvBscAluno" header="Pesquisar Aluno" width="750">
+            <p:panel id="panelGeral">
+                <p:panelGrid columns="1" layout="grid" styleClass="pgFiltrosPesquisa">
+                    <p:outputLabel value="Código" />
+                    <p:inputNumber value="#{pessoaBean.filtroCodBusca}" decimalPlaces="0" styleClass="inputTextCodigo" />
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Pesquisar" icon="pi pi-search" style="margin-right: 10px"
+                                         actionListener="#{pessoaBean.pesquisarAlunos()}" update=":formDlg:dtAlunos" />
+                    </f:facet>
+                </p:panelGrid>
+                <br />
+                <p:dataTable id="dtAlunos" value="#{pessoaBean.alunosFiltrados}" var="aluno" selectionMode="single"
+                             scrollable="true" scrollHeight="250" selection="#{pessoaBean.alunoSelecionado}" rowKey="#{aluno.id}">
+                    <p:column headerText="Código">
+                        <h:outputText value="#{aluno.id}" />
+                    </p:column>
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{aluno.pessoa.nome}" />
+                    </p:column>
+                    <p:column headerText="CPF">
+                        <h:outputText value="#{aluno.pessoa.cpf}" />
+                    </p:column>
+                    <p:column headerText="E-mail">
+                        <h:outputText value="#{aluno.pessoa.email}" />
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+            <f:facet name="footer">
+                <p:commandButton value="Confirmar" icon="pi pi-check" actionListener="#{pessoaBean.selecionarAluno()}" update=":form1" />
+                <p:commandButton value="Fechar" icon="pi pi-times" onclick="PF('wvBscAluno').hide()" />
+            </f:facet>
+        </p:dialog>
+
+        <p:dialog widgetVar="wvBscProfessor" header="Pesquisar Professor" width="750">
+            <p:panel id="panelGeralProfessor">
+                <p:panelGrid columns="1" layout="grid" styleClass="pgFiltrosPesquisa">
+                    <p:outputLabel value="Código" />
+                    <p:inputNumber value="#{pessoaBean.filtroCodBusca}" decimalPlaces="0" styleClass="inputTextCodigo" />
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Pesquisar" icon="pi pi-search" style="margin-right: 10px"
+                                         actionListener="#{pessoaBean.pesquisarProfessores()}" update=":formDlg:dtProfessores" />
+                    </f:facet>
+                </p:panelGrid>
+                <br />
+                <p:dataTable id="dtProfessores" value="#{pessoaBean.professoresFiltrados}" var="professor" selectionMode="single"
+                             scrollable="true" scrollHeight="250" selection="#{pessoaBean.professorSelecionado}" rowKey="#{professor.id}">
+                    <p:column headerText="Código">
+                        <h:outputText value="#{professor.id}" />
+                    </p:column>
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{professor.pessoa.nome}" />
+                    </p:column>
+                    <p:column headerText="CPF">
+                        <h:outputText value="#{professor.pessoa.cpf}" />
+                    </p:column>
+                    <p:column headerText="E-mail">
+                        <h:outputText value="#{professor.pessoa.email}" />
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+            <f:facet name="footer">
+                <p:commandButton value="Confirmar" icon="pi pi-check" actionListener="#{pessoaBean.selecionarProfessor()}" update=":form1" />
+                <p:commandButton value="Fechar" icon="pi pi-times" onclick="PF('wvBscProfessor').hide()" />
+            </f:facet>
+        </p:dialog>
+    </h:form>
+</ui:composition>

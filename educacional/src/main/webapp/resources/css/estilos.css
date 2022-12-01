@@ -66,3 +66,40 @@ body .ui-panel {
     font-weight: bold;
 }
 
+.formBusca {
+    display: flex;
+    align-items: center;
+    width: 25%;
+    min-width: 200px;
+}
+
+.inputPesquisa {
+    height: 35px;
+    width: 100%;
+    border-top-left-radius: 20px !important;
+    border-bottom-left-radius: 20px !important;
+}
+
+.ui-inputgroup {
+    width: 100%;
+}
+
+.btnPesquisa {
+    height: 35px !important;
+    background-color: white !important;
+    border: 1px solid #ced4da !important;
+    border-left: none !important;
+    border-top-right-radius: 20px !important;
+    border-bottom-right-radius: 20px !important;
+}
+
+.pgFiltrosPesquisa > .ui-panelgrid-footer {
+    display: flex !important;
+    justify-content: end !important;
+}
+
+.panelGeral > .ui-panel-footer {
+    display: flex !important;
+    justify-content: end !important;
+}
+
