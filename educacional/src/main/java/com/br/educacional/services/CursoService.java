@@ -18,9 +18,17 @@ public class CursoService extends BaseService<Curso> {
         if (codigo != null) {
             sql += " WHERE ID = " + codigo;
         } else if (query != null && !query.isEmpty()) {
-            sql += " WHERE DESCRICAO LIKE '%" + query + "%'";
+            sql += " WHERE UPPER(DESCRICAO) LIKE UPPER('%" + query + "%')";
         }
         return executeNativeQuery(Curso.class, sql);
+    }
+
+    public Curso getCursoPeloCodigo(Integer codigo) {
+        List<Curso> cursos = getCursos(codigo, null);
+        if (cursos != null && !cursos.isEmpty()) {
+            return cursos.get(0);
+        }
+        return null;
     }
 
     public void inserirCurso(Curso curso) {

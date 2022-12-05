@@ -18,9 +18,17 @@ public class DisciplinaService extends BaseService<Disciplina> {
         if (codigo != null) {
             sql += " WHERE ID = " + codigo;
         } else if (query != null && !query.isEmpty()) {
-            sql += " WHERE NOME LIKE '%" + query + "%'";
+            sql += " WHERE UPPER(DESCRICAO) LIKE UPPER('%" + query + "%')";
         }
         return executeNativeQuery(Disciplina.class, sql);
+    }
+
+    public Disciplina getDisciplinaPorCodigo(Integer codDisc) {
+        List<Disciplina> disciplinas = getDisciplinas(codDisc, null);
+        if (disciplinas != null && !disciplinas.isEmpty()) {
+            return disciplinas.get(0);
+        }
+        return null;
     }
 
     public void inserirDisciplina(Disciplina disciplina) {

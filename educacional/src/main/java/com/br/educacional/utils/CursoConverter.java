@@ -1,7 +1,7 @@
 package com.br.educacional.utils;
 
-import com.br.educacional.domains.Municipio;
-import com.br.educacional.services.MunicipioService;
+import com.br.educacional.domains.Curso;
+import com.br.educacional.services.CursoService;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -16,19 +16,19 @@ import javax.inject.Named;
  * @author Piaia
  */
 @Named
-@FacesConverter(value = "cidadeConverter", managed = true)
-public class MunicipioConverter implements Converter<Municipio> {
+@FacesConverter(value = "cursoConverter", managed = true)
+public class CursoConverter implements Converter<Curso> {
 
     @EJB
-    private MunicipioService municipioService;
+    private CursoService cursoService;
 
     @Override
-    public Municipio getAsObject(FacesContext context, UIComponent component, String value) {
+    public Curso getAsObject(FacesContext context, UIComponent component, String value) {
         if (value != null && value.trim().length() > 0) {
             try {
-                return municipioService.getCidadePorCodigo(Integer.valueOf(value));
+                return cursoService.getCursoPeloCodigo(Integer.valueOf(value));
             } catch (NumberFormatException e) {
-                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro de conversão", "Não é uma cidade válida."));
+                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro de conversão", "Não é um curso válido."));
             }
         } else {
             return null;
@@ -36,7 +36,7 @@ public class MunicipioConverter implements Converter<Municipio> {
     }
 
     @Override
-    public String getAsString(FacesContext context, UIComponent component, Municipio value) {
+    public String getAsString(FacesContext context, UIComponent component, Curso value) {
         if (value != null) {
             return String.valueOf(value.getId());
         } else {

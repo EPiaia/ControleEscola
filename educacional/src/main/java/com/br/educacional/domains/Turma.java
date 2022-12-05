@@ -24,6 +24,10 @@ public class Turma implements Serializable {
     @Column(name = "ID")
     private Integer id;
     @NotNull
+    @JoinColumn(name = "CURSO_ID", referencedColumnName = "ID")
+    @OneToOne
+    private Curso curso;
+    @NotNull
     @JoinColumn(name = "DISCIPLINA_ID", referencedColumnName = "ID")
     @OneToOne
     private Disciplina disciplina;
@@ -43,6 +47,14 @@ public class Turma implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Curso getCurso() {
+        return curso;
+    }
+
+    public void setCurso(Curso curso) {
+        this.curso = curso;
     }
 
     public Disciplina getDisciplina() {

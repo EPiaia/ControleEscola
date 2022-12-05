@@ -1,0 +1,131 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:comp="http://xmlns.jcp.org/jsf/composite/comp">
+
+    <ui:define name="title">Cadastro de Turma</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form1">
+            <p:growl id="mensagem" />
+            <p:panel header="Dados Gerais">
+                <p:panelGrid columns="2" layout="grid">
+                    <p:panelGrid columns="1" layout="grid">
+                        <p:outputLabel value="Código" for="@next" />
+                        <p:inputText value="#{turmaBean.turma.id}" disabled="true" size="10" />
+
+                        <p:outputLabel value="Disciplina" for="@next" />
+                        <p:autoComplete value="#{turmaBean.turma.disciplina}" completeMethod="#{turmaBean.filtrarDisciplinas}" scrollHeight="250" required="true" autocomplete="false"
+                                        placeholder="Pesquise pelo nome da Disciplina" var="disc" converter="#{disciplinaConverter}" itemLabel="#{disc.descricao}" itemValue="#{disc}" />
+
+                        <p:outputLabel value="Curso" for="@next" />
+                        <p:autoComplete value="#{turmaBean.turma.curso}" completeMethod="#{turmaBean.filtrarCursos}" scrollHeight="250" required="true" autocomplete="false"
+                                        placeholder="Pesquise pelo nome do Curso" var="curso" converter="#{cursoConverter}" itemLabel="#{curso.descricao}" itemValue="#{curso}" />
+                    </p:panelGrid>
+                    <p:panelGrid columns="1" layout="grid">
+                        <p:outputLabel value="Ano Início" for="@next" />
+                        <p:inputText value="#{turmaBean.turma.anoInicio}">
+                            <p:keyFilter mask="pint" />
+                        </p:inputText>
+                        <p:outputLabel value="Semestre Início" for="@next" />
+                        <p:inputNumber value="#{turmaBean.turma.semestreInicio}" decimalPlaces="0" minValue="1" maxValue="2" />
+                    </p:panelGrid>
+                </p:panelGrid>
+            </p:panel>
+            <br />
+            <p:panel header="Alunos">
+                <p:panelGrid id="pgAlunos" columns="2" layout="grid" rendered="#{turmaBean.renderizaSelecaoAluno}">
+                    <p:panelGrid columns="1" layout="grid">
+                        <p:outputLabel value="Código" for="@next" />
+                        <p:inputText value="#{turmaBean.filtroCodAluno}" maxlength="10">
+                            <p:keyFilter mask="pint" />
+                        </p:inputText>
+
+                        <p:outputLabel value="Descrição" for="@next" />
+                        <p:inputText value="#{turmaBean.filtroNomeAluno}" maxlength="255" />
+
+                        <p:commandButton value="Pesquisar" icon="pi pi-search" actionListener="#{turmaBean.buscarAlunos()}" process=":form1:pgAlunos" update=":form1:pgAlunos" />
+
+                        <br />
+
+                        <p:dataTable value="#{turmaBean.alunosFiltrados}" var="alu" selection="#{turmaBean.alunosSelecionados}" rowKey="#{alu.id}">
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                            <p:column headerText="Código">
+                                <h:outputText value="#{alu.id}" />
+                            </p:column>
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{alu.pessoa.nome}" />
+                            </p:column>
+                        </p:dataTable>
+                        <p:commandButton value="Selecionar" icon="pi pi-check" actionListener="#{turmaBean.selecionarAlunos()}"
+                                         process=":form1:pgAlunos" update=":form1:pgAlunos" />
+                    </p:panelGrid>
+
+                    <p:panelGrid columns="1" layout="grid">
+                        <p:dataTable value="#{turmaBean.turmaxAlunos}" var="txa">
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{txa.aluno.pessoa.nome}" />
+                            </p:column>
+                            <p:column headerText="E-mail">
+                                <h:outputText value="#{txa.aluno.pessoa.email}" />
+                            </p:column>
+                            <p:column headerText="Ações">
+                                <p:commandButton value="Remover" icon="pi pi-trash" actionListener="#{turmaBean.removerAluno(txa)}" process="@this" update=":form1:pgAlunos" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:panelGrid>
+                </p:panelGrid>
+
+                <p:staticMessage severity="info" detail="Para adicinar alunos salve a Turma" rendered="#{not turmaBean.renderizaSelecaoAluno}" />
+            </p:panel>
+            <br />
+            <p:panel>
+                <f:facet name="footer">
+                    <comp:toolbarCrud bean="#{turmaBean}" />
+                </f:facet>
+            </p:panel>
+        </h:form>
+
+        <h:form id="formDlg">
+            <p:dialog widgetVar="wvBscTurma" header="Pesquisar Turma" width="750">
+                <p:panel id="panelGeral">
+                    <p:panelGrid columns="1" layout="grid" styleClass="pgFiltrosPesquisa">
+                        <p:outputLabel value="Código" />
+                        <p:inputNumber value="#{turmaBean.filtroCodTurma}" decimalPlaces="0" styleClass="inputTextCodigo" />
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Pesquisar" icon="pi pi-search" style="margin-right: 10px"
+                                             actionListener="#{turmaBean.buscarTurmas()}" update=":formDlg:dtTurmas" />
+                        </f:facet>
+                    </p:panelGrid>
+                    <br />
+                    <p:dataTable id="dtTurmas" value="#{turmaBean.turmasFiltradas}" var="turma" selectionMode="single"
+                                 scrollable="true" scrollHeight="250" selection="#{turmaBean.turmaSelecionada}" rowKey="#{turma.id}">
+                        <p:column headerText="Código">
+                            <h:outputText value="#{turma.id}" />
+                        </p:column>
+                        <p:column headerText="Curso">
+                            <h:outputText value="#{turma.curso.descricao}" />
+                        </p:column>
+                        <p:column headerText="Disciplina">
+                            <h:outputText value="#{turma.disciplina.descricao}" />
+                        </p:column>
+                        <p:column headerText="Ano">
+                            <h:outputText value="#{turma.anoInicio}" />
+                        </p:column>
+                        <p:column headerText="Semestre">
+                            <h:outputText value="#{turma.semestreInicio}" />
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+                <f:facet name="footer">
+                    <p:commandButton value="Confirmar" icon="pi pi-check" actionListener="#{turmaBean.selecionarTurma()}" update=":form1" />
+                    <p:commandButton value="Fechar" icon="pi pi-times" onclick="PF('wvBscTurma').hide()" />
+                </f:facet>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>
