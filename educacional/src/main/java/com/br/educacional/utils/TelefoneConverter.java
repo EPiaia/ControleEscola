@@ -25,7 +25,7 @@ public class TelefoneConverter implements Converter {
     @Override
     public String getAsString(FacesContext fc, UIComponent uic, Object t) {
         final String value = (String) t;
-        if (value == null || value.length() != 11) {
+        if (value == null || value.length() > 12) {
             return null;
         }
         return "(" + value.substring(0, 3) + ")"

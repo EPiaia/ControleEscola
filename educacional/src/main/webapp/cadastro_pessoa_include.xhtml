@@ -18,10 +18,10 @@
                     <p:inputText value="#{pessoaBean.pessoa.nome}" maxlength="255" required="true" />
 
                     <p:outputLabel value="CPF" for="@next" />
-                    <p:inputMask value="#{pessoaBean.pessoa.cpf}" mask="999.999.999-99" required="true" converter="#{cpfConverter}" />
+                    <p:inputMask value="#{pessoaBean.pessoa.cpf}" mask="999.999.999-99" required="true" converter="#{cpfConverter}" validator="CpfValidator" />
 
                     <p:outputLabel value="E-mail" for="@next" />
-                    <p:inputText value="#{pessoaBean.pessoa.email}" maxlength="150" required="true" />
+                    <p:inputText value="#{pessoaBean.pessoa.email}" maxlength="150" required="true" validator="EmailValidator" />
 
                     <p:outputLabel value="Telefone" for="@next" />
                     <p:inputMask value="#{pessoaBean.pessoa.telefone}" mask="(999)99999-9999" required="true" converter="#{telefoneConverter}" />
