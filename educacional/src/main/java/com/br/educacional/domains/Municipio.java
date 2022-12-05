@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -30,6 +32,9 @@ public class Municipio implements Serializable {
     @NotNull
     @Column(name = "UF")
     private String uf;
+    @JoinColumn(name = "ESTADO_ID", referencedColumnName = "ID")
+    @ManyToOne
+    private Estado estado;
 
     public Municipio() {
     }
@@ -64,6 +69,14 @@ public class Municipio implements Serializable {
 
     public void setUf(String uf) {
         this.uf = uf;
+    }
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
 
     @Override

@@ -28,7 +28,7 @@ public class PessoaService extends BaseService<Pessoa> {
             throw new RuntimeException("Tipo não cadastrado");
         }
         StringBuilder sql = new StringBuilder();
-        sql.append("CALL INSERE_ALUNO_PROFESSOR (");
+        sql.append("EXECUTE PROCEDURE INSERE_ALUNO_PROFESSOR (");
         sql.append("'").append(pessoa.getNome()).append("', ");
         sql.append("'").append(pessoa.getCpf()).append("', ");
         sql.append("'").append(pessoa.getEmail()).append("', ");
@@ -37,14 +37,14 @@ public class PessoaService extends BaseService<Pessoa> {
         sql.append("'").append(pessoa.getBairro()).append("', ");
         sql.append(pessoa.getNumero()).append(", ");
         sql.append(pessoa.getCidade().getId()).append(", ");
-        sql.append(pessoa.getEstado().getId()).append(", ");
         sql.append("'").append(tipo).append("');");
         executeNativeUpdate(sql.toString());
     }
 
     public void atualizarPessoa(Pessoa pessoa) {
         StringBuilder sql = new StringBuilder();
-        sql.append("CALL ATUALIZA_PESSOA (");
+        sql.append("EXECUTE PROCEDURE ATUALIZA_PESSOA (");
+        sql.append(pessoa.getId()).append(", ");
         sql.append("'").append(pessoa.getNome()).append("', ");
         sql.append("'").append(pessoa.getCpf()).append("', ");
         sql.append("'").append(pessoa.getEmail()).append("', ");
@@ -52,8 +52,7 @@ public class PessoaService extends BaseService<Pessoa> {
         sql.append("'").append(pessoa.getRua()).append("', ");
         sql.append("'").append(pessoa.getBairro()).append("', ");
         sql.append(pessoa.getNumero()).append(", ");
-        sql.append(pessoa.getCidade().getId()).append(", ");
-        sql.append(pessoa.getEstado().getId()).append(");");
+        sql.append(pessoa.getCidade().getId()).append(");");
         executeNativeUpdate(sql.toString());
     }
 

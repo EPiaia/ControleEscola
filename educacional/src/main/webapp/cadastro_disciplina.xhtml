@@ -1,0 +1,76 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:comp="http://xmlns.jcp.org/jsf/composite/comp">
+
+    <ui:define name="title">Cadastro de Disciplina</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form1">
+            <p:growl id="mensagem" />
+            <p:panel header="Dados Gerais">
+                <p:panelGrid columns="2" layout="grid">
+                    <p:panelGrid columns="1" layout="grid">
+                        <p:outputLabel value="Código" for="@next" />
+                        <p:inputText value="#{disciplinaBean.disciplina.id}" disabled="true" size="10" />
+
+                        <p:outputLabel value="Descrição" for="@next" />
+                        <p:inputText value="#{disciplinaBean.disciplina.descricao}" maxlength="250" required="true" />
+                    </p:panelGrid>
+                    <p:panelGrid columns="1" layout="grid">
+                        <p:outputLabel value="Professor" for="@next" />
+                        <p:autoComplete value="#{disciplinaBean.disciplina.professor}" completeMethod="#{disciplinaBean.filtrarProfessores}" scrollHeight="250" required="true" autocomplete="false"
+                                        placeholder="Pesquise pelo nome do professor" var="prof" converter="#{professorConverter}" itemLabel="#{prof.pessoa.nome}" itemValue="#{prof}" />
+
+                        <p:outputLabel value="Carga Horária" for="@next" />
+                        <p:inputText value="#{disciplinaBean.disciplina.cargaHoraria}">
+                            <p:keyFilter mask="pint" />
+                        </p:inputText>
+                    </p:panelGrid>
+                </p:panelGrid>
+                <f:facet name="footer">
+                    <comp:toolbarCrud bean="#{disciplinaBean}" />
+                </f:facet>
+            </p:panel>
+        </h:form>
+
+        <h:form id="formDlg">
+            <p:dialog widgetVar="wvBscDisciplina" header="Pesquisar Disciplina" width="750">
+                <p:panel id="panelGeral">
+                    <p:panelGrid columns="1" layout="grid" styleClass="pgFiltrosPesquisa">
+                        <p:outputLabel value="Código" />
+                        <p:inputNumber value="#{disciplinaBean.filtroCod}" decimalPlaces="0" styleClass="inputTextCodigo" />
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Pesquisar" icon="pi pi-search" style="margin-right: 10px"
+                                             actionListener="#{disciplinaBean.buscarDisciplinas()}" update=":formDlg:dtDisciplinas" />
+                        </f:facet>
+                    </p:panelGrid>
+                    <br />
+                    <p:dataTable id="dtDisciplinas" value="#{disciplinaBean.disciplinasFiltradas}" var="disc" selectionMode="single"
+                                 scrollable="true" scrollHeight="250" selection="#{disciplinaBean.disciplinaSelecionada}" rowKey="#{disc.id}">
+                        <p:column headerText="Código">
+                            <h:outputText value="#{disc.id}" />
+                        </p:column>
+                        <p:column headerText="Nome">
+                            <h:outputText value="#{disc.descricao}" />
+                        </p:column>
+                        <p:column headerText="Carga Horária">
+                            <h:outputText value="#{disc.cargaHoraria}" />
+                        </p:column>
+                        <p:column headerText="Professor">
+                            <h:outputText value="#{disc.professor.pessoa.nome}" />
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+                <f:facet name="footer">
+                    <p:commandButton value="Confirmar" icon="pi pi-check" actionListener="#{disciplinaBean.selecionarDisciplina()}" update=":form1" />
+                    <p:commandButton value="Fechar" icon="pi pi-times" onclick="PF('wvBscDisciplina').hide()" />
+                </f:facet>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

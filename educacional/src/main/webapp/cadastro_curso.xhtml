@@ -1,0 +1,132 @@
+<ui:composition template="/WEB-INF/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:comp="http://xmlns.jcp.org/jsf/composite/comp">
+
+    <ui:define name="title">Cadastro de Disciplina</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form1">
+            <p:growl id="mensagem" />
+            <p:panel header="Dados Gerais">
+                <p:panelGrid columns="2" layout="grid">
+                    <p:panelGrid columns="1" layout="grid">
+                        <p:outputLabel value="Código" for="@next" />
+                        <p:inputText value="#{cursoBean.curso.id}" disabled="true" size="10" />
+
+                        <p:outputLabel value="Descrição" for="@next" />
+                        <p:inputText value="#{cursoBean.curso.descricao}" maxlength="250" required="true" />
+                    </p:panelGrid>
+                    <p:panelGrid columns="1" layout="grid">
+                        <p:outputLabel value="Quantidade de Semestres" for="@next" />
+                        <p:inputText value="#{cursoBean.curso.qtdSemestres}">
+                            <p:keyFilter mask="pint" />
+                            <p:ajax event="change" process="@this" update=":form1:pgDiscCurso" listener="#{cursoBean.alterarSemestre()}" />
+                        </p:inputText>
+
+                        <p:outputLabel value="Horas Totais" for="@next" />
+                        <p:inputText value="#{cursoBean.curso.horasTotais}" disabled="true" />
+                    </p:panelGrid>
+                </p:panelGrid>
+            </p:panel>
+            <br />
+            <p:panel header="Disciplinas">
+                <p:panelGrid id="pgDiscCurso" columns="2" layout="grid" rendered="#{cursoBean.renderizaSelecaoDisc}">
+                    <p:panelGrid columns="1" layout="grid">
+                        <p:outputLabel value="Código" for="@next" />
+                        <p:inputText value="#{cursoBean.filtroCodDisc}" maxlength="10">
+                            <p:keyFilter mask="pint" />
+                        </p:inputText>
+
+                        <p:outputLabel value="Descrição" for="@next" />
+                        <p:inputText value="#{cursoBean.filtroDescDisc}" maxlength="255" />
+
+                        <p:commandButton value="Pesquisar" icon="pi pi-search" actionListener="#{cursoBean.buscarDisciplinas()}" process=":form1:pgDiscCurso" update=":form1:pgDiscCurso" />
+
+                        <br />
+
+                        <p:dataTable value="#{cursoBean.disciplinas}" var="disc" selection="#{cursoBean.disciplinasSelecionadas}" rowKey="#{disc.id}">
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                            <p:column headerText="Código">
+                                <h:outputText value="#{disc.id}" />
+                            </p:column>
+                            <p:column headerText="Descrição">
+                                <h:outputText value="#{disc.descricao}" />
+                            </p:column>
+                            <p:column headerText="Carga Horária">
+                                <h:outputText value="#{disc.cargaHoraria}" />
+                            </p:column>
+                        </p:dataTable>
+                        <p:commandButton value="Selecionar" icon="pi pi-check" actionListener="#{cursoBean.selecionarDisciplinas()}"
+                                         process=":form1:pgDiscCurso" update=":form1:pgDiscCurso" />
+                    </p:panelGrid>
+
+                    <p:panelGrid columns="1" layout="grid">
+                        <p:dataTable value="#{cursoBean.discxCurso}" var="discxcurso">
+                            <p:column headerText="Disciplina">
+                                <h:outputText value="#{discxcurso.disciplina.descricao}" />
+                            </p:column>
+                            <p:column headerText="Carga Horária">
+                                <h:outputText value="#{discxcurso.disciplina.cargaHoraria}" />
+                            </p:column>
+                            <p:column headerText="Semestre">
+                                <p:selectOneMenu value="#{discxcurso.semestre}">
+                                    <f:selectItems value="#{cursoBean.semestres}" var="sem" itemLabel="#{sem}" itemValue="#{sem}" />
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column headerText="Ações">
+                                <p:commandButton value="Remover" icon="pi pi-trash" actionListener="#{cursoBean.removerDisciplina(discxcurso)}" process="@this" update=":form1:pgDiscCurso" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:panelGrid>
+                </p:panelGrid>
+                <p:staticMessage severity="info" detail="Para atribuir uma disciplina é preciso salvar o curso." rendered="#{not cursoBean.renderizaSelecaoDisc}" />
+            </p:panel>
+            <br />
+            <p:panel>
+                <f:facet name="footer">
+                    <comp:toolbarCrud bean="#{cursoBean}" />
+                </f:facet>
+            </p:panel>
+        </h:form>
+
+        <h:form id="formDlg">
+            <p:dialog widgetVar="wvBscCurso" header="Pesquisar Curso" width="750">
+                <p:panel id="panelGeral">
+                    <p:panelGrid columns="1" layout="grid" styleClass="pgFiltrosPesquisa">
+                        <p:outputLabel value="Código" />
+                        <p:inputNumber value="#{cursoBean.filtroCod}" decimalPlaces="0" styleClass="inputTextCodigo" />
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Pesquisar" icon="pi pi-search" style="margin-right: 10px"
+                                             actionListener="#{cursoBean.buscarCursos()}" update=":formDlg:dtCursos" />
+                        </f:facet>
+                    </p:panelGrid>
+                    <br />
+                    <p:dataTable id="dtCursos" value="#{cursoBean.cursosFiltrados}" var="curso" selectionMode="single"
+                                 scrollable="true" scrollHeight="250" selection="#{cursoBean.cursoSelecionado}" rowKey="#{curso.id}">
+                        <p:column headerText="Código">
+                            <h:outputText value="#{curso.id}" />
+                        </p:column>
+                        <p:column headerText="Nome">
+                            <h:outputText value="#{curso.descricao}" />
+                        </p:column>
+                        <p:column headerText="Semestres">
+                            <h:outputText value="#{curso.qtdSemestres}" />
+                        </p:column>
+                        <p:column headerText="Horas Totais">
+                            <h:outputText value="#{curso.horasTotais}" />
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+                <f:facet name="footer">
+                    <p:commandButton value="Confirmar" icon="pi pi-check" actionListener="#{cursoBean.selecionarCurso()}" update=":form1" />
+                    <p:commandButton value="Fechar" icon="pi pi-times" onclick="PF('wvBscCurso').hide()" />
+                </f:facet>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

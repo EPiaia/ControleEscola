@@ -22,9 +22,9 @@ public class AlunoService extends BaseService<Aluno> {
 
     public List<Aluno> pesquisarAlunos(Integer codigo) {
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT * FROM ALUNO");
+        sql.append("SELECT * FROM PESQUISAR_ALUNO");
         if (codigo != null) {
-            sql.append(" WHERE ID = ").append(codigo);
+            sql.append("(").append(codigo).append(")");
         }
         return executeNativeQuery(Aluno.class, sql.toString());
     }

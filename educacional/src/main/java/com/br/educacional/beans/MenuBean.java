@@ -32,6 +32,8 @@ public class MenuBean implements Serializable {
         DefaultSubMenu subMenuCadastros = criarSubMenu("Cadastros", "pi pi-plus");
         itensSubMenu.add(criarMenuItem("Aluno", "/educacional/cadastro_aluno.xhtml"));
         itensSubMenu.add(criarMenuItem("Professor", "/educacional/cadastro_professor.xhtml"));
+        itensSubMenu.add(criarMenuItem("Disciplina", "/educacional/cadastro_disciplina.xhtml"));
+        itensSubMenu.add(criarMenuItem("Curso", "/educacional/cadastro_curso.xhtml"));
         addElements(subMenuCadastros, itensSubMenu);
     }
 

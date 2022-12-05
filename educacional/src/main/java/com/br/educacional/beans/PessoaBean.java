@@ -1,12 +1,10 @@
 package com.br.educacional.beans;
 
 import com.br.educacional.domains.Aluno;
-import com.br.educacional.domains.Estado;
 import com.br.educacional.domains.Municipio;
 import com.br.educacional.domains.Pessoa;
 import com.br.educacional.domains.Professor;
 import com.br.educacional.services.AlunoService;
-import com.br.educacional.services.EstadoService;
 import com.br.educacional.services.MunicipioService;
 import com.br.educacional.services.PessoaService;
 import com.br.educacional.services.ProfessorService;
@@ -29,8 +27,6 @@ public class PessoaBean implements Serializable {
     @EJB
     private MunicipioService municipioService;
     @EJB
-    private EstadoService estadoService;
-    @EJB
     private PessoaService pessoaService;
     @EJB
     private AlunoService alunoService;
@@ -52,12 +48,10 @@ public class PessoaBean implements Serializable {
 
     public void gravar() {
         Pessoa p = pessoaService.getPessoaPeloCpf(pessoa.getCpf());
-        if (pessoa.getId() != null && p != null) {
+        if (pessoa.getId() == null && p != null) {
             JsfUtil.warn("Já existe uma pessoa com este CPF!");
             return;
         }
-        Estado estado = estadoService.getEstadoPorUf(pessoa.getCidade().getUf());
-        pessoa.setEstado(estado);
         if (pessoa.getId() == null) {
             pessoaService.inserirAlunoProfessor(pessoa, getTipo());
         } else {
@@ -110,7 +104,7 @@ public class PessoaBean implements Serializable {
     }
 
     public void pesquisarProfessores() {
-        this.professoresFiltrados = professorService.pesquisarProfessores(filtroCodBusca);
+        this.professoresFiltrados = professorService.pesquisarProfessores(filtroCodBusca, null);
     }
 
     public void selecionarProfessor() {

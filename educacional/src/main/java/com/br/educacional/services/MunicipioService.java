@@ -24,7 +24,7 @@ public class MunicipioService extends BaseService<Municipio> {
     }
 
     public List<Municipio> getCidades(String query) {
-        String sql = "SELECT * FROM MUNICIPIO M WHERE M.NOME LIKE '%" + query + "%'";
+        String sql = "SELECT * FROM PESQUISAR_CIDADE('" + query + "')";
         return executeNativeQuery(Municipio.class, sql);
     }
 }

@@ -20,13 +20,25 @@ public class ProfessorService extends BaseService<Professor> {
         executeNativeUpdate(sql.toString());
     }
 
-    public List<Professor> pesquisarProfessores(Integer codigo) {
+    public List<Professor> pesquisarProfessores(Integer codigo, String nome) {
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT * FROM PROFESSOR");
         if (codigo != null) {
-            sql.append(" WHERE ID = ").append(codigo);
+            sql.append("SELECT * FROM PESQUISAR_PROFESSOR").append("(").append(codigo).append(")");
+        } else {
+            sql.append("SELECT * FROM PROFESSOR ");
+            if (nome != null && !nome.isEmpty()) {
+                sql.append("PF INNER JOIN PESSOA P ON P.ID = PF.PESSOA_ID WHERE UPPER(P.NOME) LIKE UPPER('%").append(nome).append("%')");
+            }
         }
         return executeNativeQuery(Professor.class, sql.toString());
+    }
+
+    public Professor getProfessorPeloCodigo(Integer codigo) {
+        List<Professor> professores = pesquisarProfessores(codigo, null);
+        if (professores != null && !professores.isEmpty()) {
+            return professores.get(0);
+        }
+        return null;
     }
 
     public Professor getProfessorPelaPessoa(Pessoa pessoa) {

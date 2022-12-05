@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -30,10 +29,6 @@ public class Disciplina implements Serializable {
     @NotNull
     @Column(name = "CARGA_HORARIA")
     private Integer cargaHoraria;
-    @NotNull
-    @JoinColumn(name = "CURSO_ID", referencedColumnName = "ID")
-    @ManyToOne
-    private Curso curso;
     @NotNull
     @JoinColumn(name = "PROFESSOR_ID", referencedColumnName = "ID")
     @OneToOne
@@ -64,14 +59,6 @@ public class Disciplina implements Serializable {
 
     public void setCargaHoraria(Integer cargaHoraria) {
         this.cargaHoraria = cargaHoraria;
-    }
-
-    public Curso getCurso() {
-        return curso;
-    }
-
-    public void setCurso(Curso curso) {
-        this.curso = curso;
     }
 
     public Professor getProfessor() {

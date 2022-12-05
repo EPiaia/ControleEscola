@@ -44,9 +44,6 @@ public class Pessoa implements Serializable {
     @JoinColumn(name = "CIDADE_ID", referencedColumnName = "ID")
     @ManyToOne
     private Municipio cidade;
-    @JoinColumn(name = "ESTADO_ID", referencedColumnName = "ID")
-    @ManyToOne
-    private Estado estado;
 
     public Pessoa() {
     }
@@ -121,14 +118,6 @@ public class Pessoa implements Serializable {
 
     public void setCidade(Municipio cidade) {
         this.cidade = cidade;
-    }
-
-    public Estado getEstado() {
-        return estado;
-    }
-
-    public void setEstado(Estado estado) {
-        this.estado = estado;
     }
 
     @Override
